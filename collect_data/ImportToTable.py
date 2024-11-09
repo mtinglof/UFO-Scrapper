@@ -1,7 +1,7 @@
 import pymysql
 import pandas as pd
 import os
-from tqdm import tqdm  # Import tqdm for the loading bar
+from tqdm import tqdm  
 
 # Database connection details
 connection = pymysql.connect(
@@ -15,7 +15,7 @@ try:
     # Read the CSV file into a pandas DataFrame
     csv_file_path = 'cleaned_reports.csv'
     data = pd.read_csv(csv_file_path)
-    data = data.where(pd.notnull(data), None)  # Replace NaNs with None for SQL compatibility
+    data = data.where(pd.notnull(data), None) 
     
     # Define a SQL query template for inserting data
     insert_query = """
