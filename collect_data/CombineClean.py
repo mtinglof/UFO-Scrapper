@@ -11,20 +11,20 @@ class CombineClean():
         column_names = ['geonameid','name','asiiname','alternatenames','latitude','longitude','feature class','feature code',
                         'country code','cc2','admin1 code','admin2 code','admin3 code','admin4 code','population','elevation','dem','timezone',
                         'modification date']
-        geo = pd.read_csv('./collect_data/location data/US.txt', delimiter='\t', header=None, names=column_names)
+        geo = pd.read_csv('location data/US.txt', delimiter='\t', header=None, names=column_names)
         geo['city_lower'] = geo['name'].apply(lambda x: str(x).lower())
         geo['state_lower'] = geo['admin1 code'].apply(lambda x: str(x).lower())
-        found_geo = pd.read_excel('./collect_data/location data/found_us.xlsx', index_col=0).to_dict('index')
+        found_geo = pd.read_excel('location data/found_us.xlsx', index_col=0).to_dict('index')
         return(geo, found_geo)
 
     def Combine(self):
-        listed_dates = os.listdir("./collect_data/saved_data")
+        listed_dates = os.listdir("saved_data")
         df_hold = []
         for data_file in listed_dates:
-            file_path = "./collect_data/saved_data/" + data_file
+            file_path = "saved_data/" + data_file
             df_hold.append(pd.read_csv(file_path))
         hold = pd.concat(df_hold)
-        hold.to_csv('combined.csv', index=False)
+        hold.to_csv('exports/combined.csv', index=False)
         self.Clean(hold)
     
     def Clean(self, data):   
@@ -69,11 +69,14 @@ class CombineClean():
             lat_hold.append(lat)
             long_hold.append(long)
             pop_hold.append(pop)
+        data['lat'] = lat_hold
+        data['long'] = long_hold
+        data['pop'] = pop_hold
         self.Export(data)
 
     def Export(self, data):
-        data.to_csv('cleaned_reports.csv', index=False)
-        pd.DataFrame.from_dict(self.found_geo, orient='index').to_excel("found_us.xlsx", index_label='id')
+        data.to_csv('exports/cleaned_reports.csv', index=False)
+        pd.DataFrame.from_dict(self.found_geo, orient='index').to_excel("location data/found_us.xlsx", index_label='id')
 
 
 control = CombineClean()
