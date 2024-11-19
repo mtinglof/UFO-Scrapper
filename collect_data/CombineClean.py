@@ -4,6 +4,7 @@ from tqdm import tqdm
 
 class CombineClean():
     def __init__(self):
+        os.chdir('collect_data/.')
         self.geo, self.found_geo = self.GetGeo()
         self.Combine()
 
@@ -29,7 +30,7 @@ class CombineClean():
     
     def Clean(self, data):   
         data.reset_index(inplace=True, drop=True) 
-        data['OCCURRED'] = pd.to_datetime(data['OCCURRED'], format='%m/%d/%Y %H:%M', errors='coerce')        
+        data['OCCURRED'] = pd.to_datetime(data['OCCURRED'], format='%m/%d/%Y %H:%M', errors='coerce')   
         data['REPORTED'] = pd.to_datetime(data['REPORTED'], format='%m/%d/%Y', errors='coerce').dt.date
         self.FindGeo(data)            
 
@@ -69,9 +70,9 @@ class CombineClean():
             lat_hold.append(lat)
             long_hold.append(long)
             pop_hold.append(pop)
-        data['lat'] = lat_hold
-        data['long'] = long_hold
-        data['pop'] = pop_hold
+        data['LAT'] = lat_hold
+        data['LONG'] = long_hold
+        data['POP'] = pop_hold
         self.Export(data)
 
     def Export(self, data):
